@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Newus\Satusehat\DataType;
+
+class Signature extends DataType
+{
+    /** @var Coding[] */
+    public array $type = [];
+    public ?string $when = null;
+    public ?Reference $who = null;
+    public ?Reference $onBehalfOf = null;
+    public ?string $targetFormat = null;
+    public ?string $sigFormat = null;
+    public ?string $data = null;
+
+    public function addType(Coding $type): self
+    {
+        $this->type[] = $type;
+        return $this;
+    }
+
+    public function setWho(Reference $who): self
+    {
+        $this->who = $who;
+        return $this;
+    }
+
+    public function setOnBehalfOf(Reference $onBehalfOf): self
+    {
+        $this->onBehalfOf = $onBehalfOf;
+        return $this;
+    }
+}
