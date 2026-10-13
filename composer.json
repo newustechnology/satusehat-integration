@@ -1,0 +1,62 @@
+{
+    "name": "newustechnology/satusehat-integration",
+    "description": "SATUSEHAT FHIR Integration Package for PHP — Supports CodeIgniter 3/4, Laravel, and Native PHP with High-Performance Multi-Tier Caching",
+    "keywords": [
+        "newustechnology",
+        "satusehat",
+        "satusehat-integration",
+        "fhir",
+        "codeigniter",
+        "laravel"
+    ],
+    "homepage": "https://github.com/newustechnology/satusehat-integration",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tnembull",
+            "email": "mnashiddiqi01@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "guzzlehttp/guzzle": "^7.8",
+        "phpseclib/phpseclib": "^3.0",
+        "symfony/polyfill-php80": "^1.28",
+        "vlucas/phpdotenv": "^5.5"
+    },
+    "suggest": {
+        "illuminate/config": "Required for Laravel config publishing and binding (^8.0 - ^13.0)",
+        "illuminate/database": "Required for Laravel Eloquent token and log database storage (^8.0 - ^13.0)",
+        "illuminate/support": "Required for Laravel integration helpers (^8.0 - ^13.0)",
+        "jeroenzwart/laravel-csv-seeder": "Required for KFA and terminology database seeders (^1.6)"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Newus\\Satusehat\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Newus\\Satusehat\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Newus\\Satusehat\\SatusehatServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
