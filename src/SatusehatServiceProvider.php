@@ -22,6 +22,11 @@ class SatusehatServiceProvider extends ServiceProvider
         $this->app->singleton(OAuth2Client::class, function ($app) {
             return new OAuth2Client();
         });
+
+        // Bind SSRME as singleton
+        $this->app->singleton(SSRME::class, function ($app) {
+            return new SSRME($app->make(OAuth2Client::class));
+        });
     }
 
     public function schedule(Schedule $schedule): void

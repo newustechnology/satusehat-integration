@@ -49,6 +49,8 @@ class OAuth2Client
 
     public ?string $organization_id = null;
 
+    public ?string $organization_name = null;
+
     public $override = null;
 
     public ?string $satusehat_env = null;
@@ -120,6 +122,9 @@ class OAuth2Client
             }
         }
 
+        $this->organization_name = $config['organization_name']
+            ?? (getenv('ORGANIZATION_NAME') ?: (getenv('SATUSEHAT_ORGANIZATION_NAME') ?: (getenv('ORGNAME_' . (string) $this->satusehat_env) ?: null)));
+
         if (empty($this->satusehat_env) && ! $this->override) {
             throw new OAuth2ClientException('SATUSEHAT environment is missing');
         }
@@ -179,7 +184,7 @@ class OAuth2Client
         }
 
         // Fallback: Check legacy database if Eloquent model exists
-        if (class_exists(\Newus\Satusehat\Models\SatusehatToken::class)) {
+        if (class_exists(\Illuminate\Database\Eloquent\Model::class) && class_exists(\Newus\Satusehat\Models\SatusehatToken::class)) {
             try {
                 $dbToken = \Newus\Satusehat\Models\SatusehatToken::where('environment', $this->satusehat_env)
                     ->where('client_id', $this->client_id)
@@ -225,7 +230,7 @@ class OAuth2Client
                 $this->tokenStorage->set($env, $clientId, $newToken, $expiresIn);
 
                 // Optional legacy database save if Eloquent available
-                if (class_exists(\Newus\Satusehat\Models\SatusehatToken::class)) {
+                if (class_exists(\Illuminate\Database\Eloquent\Model::class) && class_exists(\Newus\Satusehat\Models\SatusehatToken::class)) {
                     try {
                         \Newus\Satusehat\Models\SatusehatToken::create([
                             'environment' => $this->satusehat_env,
@@ -255,8 +260,8 @@ class OAuth2Client
     {
         $this->logStorage->log((string) $id, (string) $action, (string) $url, $payload, $response);
 
-        // Optional legacy Eloquent logging if class exists
-        if (class_exists(\Newus\Satusehat\Models\SatusehatLog::class)) {
+        // Optional legacy Eloquent logging if Eloquent exists
+        if (class_exists(\Illuminate\Database\Eloquent\Model::class) && class_exists(\Newus\Satusehat\Models\SatusehatLog::class)) {
             try {
                 $userId = 'System';
                 if (function_exists('auth') && auth()->user()) {

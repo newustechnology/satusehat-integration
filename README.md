@@ -2,7 +2,7 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-%5E7.4%20%7C%7C%20%5E8.0-blue)](https://www.php.net/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
-[![Tests Passing](https://img.shields.io/badge/Tests-869%20passed-brightgreen.svg)](#)
+[![Tests Passing](https://img.shields.io/badge/Tests-883%20passed-brightgreen.svg)](#)
 
 Package PHP resmi dari **Newus Technology** untuk membangun objek FHIR R4 dan berintegrasi dengan API **SATUSEHAT Kementerian Kesehatan RI** secara mudah, cepat, dan berperforma tinggi.
 
@@ -187,6 +187,71 @@ $ss = new SSRequest($client);
 $response = $ss->get('Patient', ['identifier' => 'https://fhir.kemkes.go.id/id/nik|1234567890123456']);
 
 print_r($response->json());
+```
+
+---
+
+## Modul Integrasi SSRME (SATUSEHAT Rekam Medis Elektronik)
+
+Mendukung modul resmi DTO Kemenkes untuk akses resume rekam medis pasien nasional lintas fasyankes:
+
+```php
+use Newus\Satusehat\SSRME;
+
+$ssrme = new SSRME();
+```
+
+### 1. API CHLink — Persetujuan Consent Pasien (Meja Registrasi / Perawat)
+Dipanggil di Meja Pendaftaran / Registrasi / Stasiun Perawat untuk meminta persetujuan akses resume medis pasien:
+
+```php
+$response = $ssrme->createCHLink([
+    'patient_id'        => 'P20066076728',
+    'patient_name'      => 'Tn. Asep Mulyono',
+    'practitioner_id'   => '10006000010',
+    'practitioner_name' => 'dr. Ratna Dewi, Sp.M',
+    'organization_id'   => '10000004',      // Opsional jika sudah di .env
+    'organization_name' => 'RS Satusehat',  // Opsional jika sudah di .env
+]);
+
+$consentUrl = $response->json()['data']['url'] ?? null;
+```
+
+### 2. Penanganan Kondisi Darurat (Emergency Bypass Consent)
+Jika kondisi pasien gawat darurat, fasyankes dapat melakukan bypass persetujuan secara resmi:
+
+```php
+$response = $ssrme->createEmergencyCHLink([
+    'patient_id'        => 'P20066076728',
+    'patient_name'      => 'Tn. Asep Mulyono',
+    'practitioner_id'   => '10006000010',
+    'practitioner_name' => 'dr. Ratna Dewi, Sp.M',
+]);
+```
+
+### 3. API SHLink — Akses RME Pasien (Ruang Dokter)
+Dipanggil saat dokter membuka modul resume rekam medis nasional pasien di SIMFASKES:
+
+```php
+$response = $ssrme->createSHLink([
+    'patient_id'        => 'P20066076728',
+    'patient_name'      => 'Tn. Asep Mulyono',
+    'practitioner_id'   => '10006000010',
+    'practitioner_name' => 'dr. Ratna Dewi, Sp.M',
+]);
+
+$rmeViewerUrl = $response->json()['data']['shlink_url'] ?? null;
+```
+
+### 4. Komponen Tombol Akses SATUSEHAT (Modul 1 Kemenkes)
+Render tombol standar resmi Kemenkes (floating atau inline) dengan pilihan tema `dark`, `dark-color`, atau `light`:
+
+```php
+// Tombol Dark Floating di pojok kanan bawah
+echo SSRME::renderButton($rmeViewerUrl, 'dark', ['floating' => true]);
+
+// Tombol Light Inline
+echo SSRME::renderButton($rmeViewerUrl, 'light');
 ```
 
 ---
