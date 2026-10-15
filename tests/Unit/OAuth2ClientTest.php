@@ -83,4 +83,35 @@ class OAuth2ClientTest extends TestCase
         $this->assertNull($client->findPatientSandboxByNik('0000000000000000'));
         $this->assertNull($client->findPatientSandboxByIhs('P99999999999'));
     }
+
+    public function testSandboxPractitionerDataAndLookup(): void
+    {
+        $client = new OAuth2Client([
+            'environment' => 'DEV',
+            'client_id' => 'dev_id',
+            'client_secret' => 'dev_secret',
+            'organization_id' => 'dev_org',
+        ]);
+
+        $this->assertCount(10, $client->practitioner_dev);
+        $this->assertCount(10, $client->getPractitionerSandbox());
+
+        // Find by NIK
+        $doc = $client->findPractitionerSandboxByNik('7209061211900001');
+        $this->assertNotNull($doc);
+        $this->assertSame('dr. Alexander', $doc['name']);
+        $this->assertSame('male', $doc['gender']);
+        $this->assertSame('1994-01-01', $doc['birthDate']);
+        $this->assertSame('10009880728', $doc['ihs_number']);
+
+        // Find by IHS
+        $docByIhs = $client->findPractitionerSandboxByIhs('10002074224');
+        $this->assertNotNull($docByIhs);
+        $this->assertSame('dr. Olivia Kirana, Sp.OG', $docByIhs['name']);
+        $this->assertSame('3217040109800006', $docByIhs['nik']);
+
+        // Non-existent
+        $this->assertNull($client->findPractitionerSandboxByNik('0000000000000000'));
+        $this->assertNull($client->findPractitionerSandboxByIhs('99999999999'));
+    }
 }

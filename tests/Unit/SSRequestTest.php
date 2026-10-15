@@ -116,4 +116,40 @@ class SSRequestTest extends TestCase
 
         \Newus\Satusehat\Http\HttpClientFactory::setSharedClient(null);
     }
+
+    public function testGetPractitionerByNik(): void
+    {
+        $mock = new \GuzzleHttp\Handler\MockHandler([
+            new \GuzzleHttp\Psr7\Response(200, ['Content-Type' => 'application/json'], json_encode([
+                'resourceType' => 'Bundle',
+                'entry' => [
+                    ['resource' => ['resourceType' => 'Practitioner', 'id' => '10009880728']],
+                ],
+            ])),
+        ]);
+
+        $handlerStack = \GuzzleHttp\HandlerStack::create($mock);
+        $client = new \GuzzleHttp\Client(['handler' => $handlerStack]);
+        \Newus\Satusehat\Http\HttpClientFactory::setSharedClient($client);
+
+        $storage = new MemoryTokenStorage();
+        $storage->set('DEV', 'dev_id', 'mock_token', 3000);
+
+        $oauth = new OAuth2Client([
+            'environment' => 'DEV',
+            'client_id' => 'dev_id',
+            'client_secret' => 'dev_secret',
+            'organization_id' => 'dev_org',
+            'base_url' => 'https://api-satusehat-dev.dto.kemkes.go.id',
+            'token_storage' => $storage,
+        ]);
+
+        $request = new SSRequest($oauth);
+        $res = $request->getPractitionerByNik('7209061211900001');
+
+        $this->assertTrue($res->isSuccess());
+        $this->assertSame(200, $res->getHttpCode());
+
+        \Newus\Satusehat\Http\HttpClientFactory::setSharedClient(null);
+    }
 }

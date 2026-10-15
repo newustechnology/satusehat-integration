@@ -2,7 +2,7 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-%5E7.4%20%7C%7C%20%5E8.0-blue)](https://www.php.net/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
-[![Tests Passing](https://img.shields.io/badge/Tests-885%20passed-brightgreen.svg)](#)
+[![Tests Passing](https://img.shields.io/badge/Tests-887%20passed-brightgreen.svg)](#)
 
 Package PHP resmi dari **Newus Technology** untuk membangun objek FHIR R4 dan berintegrasi dengan API **SATUSEHAT Kementerian Kesehatan RI** secara mudah, cepat, dan berperforma tinggi.
 

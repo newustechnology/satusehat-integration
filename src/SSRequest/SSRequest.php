@@ -175,6 +175,17 @@ class SSRequest
     }
 
     /**
+     * Cari dokter / nakes (Practitioner) berdasarkan NIK.
+     * Endpoint: GET /Practitioner?identifier=https://fhir.kemkes.go.id/id/nik|{nik}
+     */
+    public function getPractitionerByNik(string $nik): SSResponse
+    {
+        return $this->get('Practitioner', [
+            'identifier' => 'https://fhir.kemkes.go.id/id/nik|' . $nik,
+        ]);
+    }
+
+    /**
      * Send arbitrary request.
      *
      * @param string      $method  HTTP method (GET, POST, PUT, DELETE, PATCH)

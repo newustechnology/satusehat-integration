@@ -126,6 +126,84 @@ class OAuth2Client
     /** @var string[] */
     public array $practitioner_dev = ['10009880728', '10006926841', '10001354453', '10010910332', '10018180913', '10002074224', '10012572188', '10018452434', '10014058550', '10001915884'];
 
+    /**
+     * Data Dokter / Nakes (Practitioner) Dummy Resmi SATUSEHAT Sandbox DTO Kemenkes RI
+     *
+     * @var array<int, array<string, string>>
+     */
+    public array $practitioner_sandbox = [
+        [
+            'nik' => '7209061211900001',
+            'name' => 'dr. Alexander',
+            'gender' => 'male',
+            'birthDate' => '1994-01-01',
+            'ihs_number' => '10009880728',
+        ],
+        [
+            'nik' => '3322071302900002',
+            'name' => 'dr. Yoga Yandika, Sp.A',
+            'gender' => 'male',
+            'birthDate' => '1995-02-02',
+            'ihs_number' => '10006926841',
+        ],
+        [
+            'nik' => '3171071609900003',
+            'name' => 'dr. Syarifuddin, Sp.Pd.',
+            'gender' => 'male',
+            'birthDate' => '1988-03-03',
+            'ihs_number' => '10001354453',
+        ],
+        [
+            'nik' => '3207192310600004',
+            'name' => 'dr. Nicholas Evan, Sp.B.',
+            'gender' => 'male',
+            'birthDate' => '1986-04-04',
+            'ihs_number' => '10010910332',
+        ],
+        [
+            'nik' => '6408130207800005',
+            'name' => 'dr. Dito Arifin, Sp.M.',
+            'gender' => 'male',
+            'birthDate' => '1985-05-05',
+            'ihs_number' => '10018180913',
+        ],
+        [
+            'nik' => '3217040109800006',
+            'name' => 'dr. Olivia Kirana, Sp.OG',
+            'gender' => 'female',
+            'birthDate' => '1984-06-06',
+            'ihs_number' => '10002074224',
+        ],
+        [
+            'nik' => '3519111703800007',
+            'name' => 'dr. Alicia Chrissy, Sp.N.',
+            'gender' => 'female',
+            'birthDate' => '1982-07-07',
+            'ihs_number' => '10012572188',
+        ],
+        [
+            'nik' => '5271002009700008',
+            'name' => 'dr. Nathalie Tan, Sp.PK.',
+            'gender' => 'female',
+            'birthDate' => '1981-08-08',
+            'ihs_number' => '10018452434',
+        ],
+        [
+            'nik' => '3313096403900009',
+            'name' => 'Sheila Annisa S.Kep',
+            'gender' => 'female',
+            'birthDate' => '1980-09-09',
+            'ihs_number' => '10014058550',
+        ],
+        [
+            'nik' => '3578083008700010',
+            'name' => 'apt. Aditya Pradhana, S.Farm.',
+            'gender' => 'female',
+            'birthDate' => '1980-10-10',
+            'ihs_number' => '10001915884',
+        ],
+    ];
+
     public ?string $base_url = null;
 
     public ?string $auth_url = null;
@@ -637,6 +715,50 @@ class OAuth2Client
         foreach ($this->patient_sandbox as $patient) {
             if ($patient['ihs_number'] === $ihs) {
                 return $patient;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Dapatkan daftar 10 data dokter / nakes (Practitioner) dummy sandbox resmi Kemenkes.
+     *
+     * @return array<int, array<string, string>>
+     */
+    public function getPractitionerSandbox(): array
+    {
+        return $this->practitioner_sandbox;
+    }
+
+    /**
+     * Cari data dummy practitioner sandbox berdasarkan NIK.
+     *
+     * @param string $nik
+     * @return array<string, string>|null
+     */
+    public function findPractitionerSandboxByNik(string $nik): ?array
+    {
+        foreach ($this->practitioner_sandbox as $practitioner) {
+            if ($practitioner['nik'] === $nik) {
+                return $practitioner;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Cari data dummy practitioner sandbox berdasarkan Nomor IHS.
+     *
+     * @param string $ihs
+     * @return array<string, string>|null
+     */
+    public function findPractitionerSandboxByIhs(string $ihs): ?array
+    {
+        foreach ($this->practitioner_sandbox as $practitioner) {
+            if ($practitioner['ihs_number'] === $ihs) {
+                return $practitioner;
             }
         }
 
