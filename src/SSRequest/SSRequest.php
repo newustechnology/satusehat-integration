@@ -121,6 +121,60 @@ class SSRequest
     }
 
     /**
+     * Cari pasien berdasarkan NIK (GET /Patient?identifier=https://fhir.kemkes.go.id/id/nik|{nik}).
+     */
+    public function getPatientByNik(string $nik): SSResponse
+    {
+        return $this->get('Patient', [
+            'identifier' => 'https://fhir.kemkes.go.id/id/nik|' . $nik,
+        ]);
+    }
+
+    /**
+     * Cari pasien bayi baru lahir berdasarkan NIK Ibu (GET /Patient?identifier=https://fhir.kemkes.go.id/id/nik-ibu|{nik_ibu}).
+     */
+    public function getPatientByNikIbu(string $nikIbu): SSResponse
+    {
+        return $this->get('Patient', [
+            'identifier' => 'https://fhir.kemkes.go.id/id/nik-ibu|' . $nikIbu,
+        ]);
+    }
+
+    /**
+     * Cari pasien berdasarkan parameter kombinasi SATUSEHAT:
+     * - name, birthdate, gender
+     * - name, birthdate, nik
+     * - name, nik
+     * - nik atau nik_ibu
+     *
+     * @param array<string, mixed> $criteria
+     */
+    public function searchPatient(array $criteria): SSResponse
+    {
+        $params = [];
+
+        if (! empty($criteria['nik'])) {
+            $params['identifier'] = 'https://fhir.kemkes.go.id/id/nik|' . $criteria['nik'];
+        } elseif (! empty($criteria['nik_ibu'])) {
+            $params['identifier'] = 'https://fhir.kemkes.go.id/id/nik-ibu|' . $criteria['nik_ibu'];
+        } elseif (! empty($criteria['identifier'])) {
+            $params['identifier'] = $criteria['identifier'];
+        }
+
+        if (! empty($criteria['name'])) {
+            $params['name'] = $criteria['name'];
+        }
+        if (! empty($criteria['birthdate'])) {
+            $params['birthdate'] = $criteria['birthdate'];
+        }
+        if (! empty($criteria['gender'])) {
+            $params['gender'] = $criteria['gender'];
+        }
+
+        return $this->get('Patient', $params);
+    }
+
+    /**
      * Send arbitrary request.
      *
      * @param string      $method  HTTP method (GET, POST, PUT, DELETE, PATCH)

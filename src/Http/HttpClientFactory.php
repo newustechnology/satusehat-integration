@@ -16,7 +16,7 @@ class HttpClientFactory
      */
     public static function getClient(array $config = []): Client
     {
-        if (self::$sharedClient !== null && empty($config)) {
+        if (self::$sharedClient !== null) {
             return self::$sharedClient;
         }
 

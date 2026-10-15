@@ -365,6 +365,44 @@ class OAuth2Client
         }
     }
 
+    public function get_by_nik_ibu($resource, $nik_ibu)
+    {
+        $accessToken = $this->token();
+        if (! isset($accessToken) || is_array($accessToken)) {
+            return $this->respondError($this->oauth2_error);
+        }
+
+        $client = HttpClientFactory::getClient();
+        $headers = [
+            'Authorization' => 'Bearer ' . $accessToken,
+        ];
+
+        $url = $this->fhir_url . '/' . $resource . '?identifier=https://fhir.kemkes.go.id/id/nik-ibu|' . $nik_ibu;
+        $request = new Request('GET', $url, $headers);
+
+        try {
+            $res = $client->sendAsync($request)->wait();
+            $statusCode = $res->getStatusCode();
+            $response = json_decode($res->getBody()->getContents());
+
+            if ((isset($response->resourceType) && $response->resourceType === 'OperationOutcome') || (isset($response->total) && $response->total === 0)) {
+                $logId = 'Not Found';
+            } else {
+                $logId = $response->entry[0]->resource->id ?? 'Found';
+            }
+            $this->log($logId, 'GET', $url, null, (array) $response);
+
+            return [$statusCode, $response];
+        } catch (ClientException $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            $res = json_decode($e->getResponse()->getBody()->getContents());
+
+            $this->log('Error ' . $statusCode, 'GET', $url, null, (array) $res);
+
+            return [$statusCode, $res];
+        }
+    }
+
     public function ss_kfa_get($resource, $queryString)
     {
         $accessToken = $this->token();
