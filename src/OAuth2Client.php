@@ -32,7 +32,96 @@ function ss_config(string $key, $default = null)
 class OAuth2Client
 {
     /** @var string[] */
-    public array $patient_dev = ['P02478375538', 'P02428473601', 'P03647103112', 'P01058967035', 'P01836748436', 'P01654557057', 'P00805884304', 'P00883356749', 'P00912894463'];
+    public array $patient_dev = [
+        'P02478375538',
+        'P03647103112',
+        'P00805884304',
+        'P00912894463',
+        'P01654557057',
+        'P02280547535',
+        'P01836748436',
+        'P00883356749',
+        'P01058967035',
+        'P02428473601',
+    ];
+
+    /**
+     * Data Pasien Dummy Resmi SATUSEHAT Sandbox DTO Kemenkes RI
+     *
+     * @var array<int, array<string, string>>
+     */
+    public array $patient_sandbox = [
+        [
+            'nik' => '9271060312000001',
+            'name' => 'Ardianto Putra',
+            'gender' => 'male',
+            'birthDate' => '1992-01-09',
+            'ihs_number' => 'P02478375538',
+        ],
+        [
+            'nik' => '9204014804000002',
+            'name' => 'Claudia Sintia',
+            'gender' => 'female',
+            'birthDate' => '1989-11-03',
+            'ihs_number' => 'P03647103112',
+        ],
+        [
+            'nik' => '9104224509000003',
+            'name' => 'Elizabeth Dior',
+            'gender' => 'female',
+            'birthDate' => '1976-07-07',
+            'ihs_number' => 'P00805884304',
+        ],
+        [
+            'nik' => '9104223107000004',
+            'name' => 'Dr. Alan Bagus Prasetya',
+            'gender' => 'male',
+            'birthDate' => '1977-09-03',
+            'ihs_number' => 'P00912894463',
+        ],
+        [
+            'nik' => '9104224608000005',
+            'name' => 'Ghina Assyifa',
+            'gender' => 'female',
+            'birthDate' => '2004-08-21',
+            'ihs_number' => 'P01654557057',
+        ],
+        [
+            'nik' => '9104025209000006',
+            'name' => 'Salsabilla Anjani Rizki',
+            'gender' => 'female',
+            'birthDate' => '2001-04-16',
+            'ihs_number' => 'P02280547535',
+        ],
+        [
+            'nik' => '9201076001000007',
+            'name' => 'Theodore Elisjah',
+            'gender' => 'female',
+            'birthDate' => '1985-09-18',
+            'ihs_number' => 'P01836748436',
+        ],
+        [
+            'nik' => '9201394901000008',
+            'name' => 'Sonia Herdianti',
+            'gender' => 'female',
+            'birthDate' => '1996-06-08',
+            'ihs_number' => 'P00883356749',
+        ],
+        [
+            'nik' => '9201076407000009',
+            'name' => 'Nancy Wang',
+            'gender' => 'female',
+            'birthDate' => '1955-10-10',
+            'ihs_number' => 'P01058967035',
+        ],
+        [
+            'nik' => '9210060207000010',
+            'name' => 'Syarif Muhammad',
+            'gender' => 'male',
+            'birthDate' => '1988-11-02',
+            'ihs_number' => 'P02428473601',
+        ],
+    ];
 
     /** @var string[] */
     public array $practitioner_dev = ['10009880728', '10006926841', '10001354453', '10010910332', '10018180913', '10002074224', '10012572188', '10018452434', '10014058550', '10001915884'];
@@ -508,5 +597,49 @@ class OAuth2Client
 
             return [$statusCode, $res];
         }
+    }
+
+    /**
+     * Dapatkan daftar 10 data pasien dummy sandbox resmi Kemenkes.
+     *
+     * @return array<int, array<string, string>>
+     */
+    public function getPatientSandbox(): array
+    {
+        return $this->patient_sandbox;
+    }
+
+    /**
+     * Cari data dummy sandbox berdasarkan NIK.
+     *
+     * @param string $nik
+     * @return array<string, string>|null
+     */
+    public function findPatientSandboxByNik(string $nik): ?array
+    {
+        foreach ($this->patient_sandbox as $patient) {
+            if ($patient['nik'] === $nik) {
+                return $patient;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Cari data dummy sandbox berdasarkan Nomor IHS.
+     *
+     * @param string $ihs
+     * @return array<string, string>|null
+     */
+    public function findPatientSandboxByIhs(string $ihs): ?array
+    {
+        foreach ($this->patient_sandbox as $patient) {
+            if ($patient['ihs_number'] === $ihs) {
+                return $patient;
+            }
+        }
+
+        return null;
     }
 }
