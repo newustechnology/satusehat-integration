@@ -15,13 +15,13 @@ class StorageTest extends TestCase
         $storage = new MemoryTokenStorage();
         MemoryTokenStorage::clear();
 
-        $this->assertNull($storage->get('DEV', 'client-1'));
+        $this->assertNull($storage->get('STG', 'client-1'));
 
-        $storage->set('DEV', 'client-1', 'token-abc', 3000);
-        $this->assertSame('token-abc', $storage->get('DEV', 'client-1'));
+        $storage->set('STG', 'client-1', 'token-abc', 3000);
+        $this->assertSame('token-abc', $storage->get('STG', 'client-1'));
 
-        $storage->forget('DEV', 'client-1');
-        $this->assertNull($storage->get('DEV', 'client-1'));
+        $storage->forget('STG', 'client-1');
+        $this->assertNull($storage->get('STG', 'client-1'));
     }
 
     public function testFileTokenStorage(): void

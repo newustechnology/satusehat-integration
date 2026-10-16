@@ -13,14 +13,14 @@ class SSRequestTest extends TestCase
     public function testSSRequestInitializesWithStandaloneOAuth2Client(): void
     {
         $storage = new MemoryTokenStorage();
-        $storage->set('DEV', 'dev_id', 'mock_token', 3000);
+        $storage->set('STG', 'stg_id', 'mock_token', 3000);
 
         $oauth = new OAuth2Client([
-            'environment' => 'DEV',
-            'client_id' => 'dev_id',
-            'client_secret' => 'dev_secret',
-            'organization_id' => 'dev_org',
-            'base_url' => 'https://api-satusehat-dev.dto.kemkes.go.id',
+            'environment' => 'STG',
+            'client_id' => 'stg_id',
+            'client_secret' => 'stg_secret',
+            'organization_id' => 'stg_org',
+            'base_url' => 'https://api-satusehat-stg.dto.kemkes.go.id',
             'token_storage' => $storage,
         ]);
 
@@ -88,14 +88,14 @@ class SSRequestTest extends TestCase
         \Newus\Satusehat\Http\HttpClientFactory::setSharedClient($client);
 
         $storage = new MemoryTokenStorage();
-        $storage->set('DEV', 'dev_id', 'mock_token', 3000);
+        $storage->set('STG', 'stg_id', 'mock_token', 3000);
 
         $oauth = new OAuth2Client([
-            'environment' => 'DEV',
-            'client_id' => 'dev_id',
-            'client_secret' => 'dev_secret',
-            'organization_id' => 'dev_org',
-            'base_url' => 'https://api-satusehat-dev.dto.kemkes.go.id',
+            'environment' => 'STG',
+            'client_id' => 'stg_id',
+            'client_secret' => 'stg_secret',
+            'organization_id' => 'stg_org',
+            'base_url' => 'https://api-satusehat-stg.dto.kemkes.go.id',
             'token_storage' => $storage,
         ]);
 
@@ -133,14 +133,14 @@ class SSRequestTest extends TestCase
         \Newus\Satusehat\Http\HttpClientFactory::setSharedClient($client);
 
         $storage = new MemoryTokenStorage();
-        $storage->set('DEV', 'dev_id', 'mock_token', 3000);
+        $storage->set('STG', 'stg_id', 'mock_token', 3000);
 
         $oauth = new OAuth2Client([
-            'environment' => 'DEV',
-            'client_id' => 'dev_id',
-            'client_secret' => 'dev_secret',
-            'organization_id' => 'dev_org',
-            'base_url' => 'https://api-satusehat-dev.dto.kemkes.go.id',
+            'environment' => 'STG',
+            'client_id' => 'stg_id',
+            'client_secret' => 'stg_secret',
+            'organization_id' => 'stg_org',
+            'base_url' => 'https://api-satusehat-stg.dto.kemkes.go.id',
             'token_storage' => $storage,
         ]);
 

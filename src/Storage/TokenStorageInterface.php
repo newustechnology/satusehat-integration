@@ -7,7 +7,7 @@ interface TokenStorageInterface
     /**
      * Get stored access token for the given environment and client ID.
      *
-     * @param string $environment DEV, STG, or PROD
+     * @param string $environment STG (Sandbox/Staging) or PROD
      * @param string $clientId
      * @return string|null
      */
@@ -16,7 +16,7 @@ interface TokenStorageInterface
     /**
      * Store access token with a time-to-live in seconds (default 3000 = 50 minutes).
      *
-     * @param string $environment DEV, STG, or PROD
+     * @param string $environment STG (Sandbox/Staging) or PROD
      * @param string $clientId
      * @param string $token
      * @param int $ttl Seconds until expiration

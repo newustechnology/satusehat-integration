@@ -4,6 +4,32 @@ Semua perubahan penting pada package ini akan didokumentasikan dalam berkas ini.
 
 ---
 
+## [1.0.3] - 2026-10-16
+
+### Changed
+- **Environment Simplification**: Menghapus environment `DEV` yang tidak digunakan dan hanya mendukung 2 jenis environment resmi SATUSEHAT: `STG` (Sandbox/Staging) dan `PROD` (Production).
+- **Environment Aliasing**: Otomatis menormalisasi nilai `SANDBOX` dan `STAGING` ke `STG` serta `PRODUCTION` ke `PROD`.
+- **Environment Fallback Credentials**: Mendukung resolusi variabel environment `CLIENTID_SANDBOX`, `CLIENTSECRET_SANDBOX`, dan `ORGID_SANDBOX` sebagai fallback untuk `_STG`.
+- **Documentation & Examples**: Memperbarui `.env.example` dan `README.md` dengan panduan konfigurasi environment `STG` dan `PROD`.
+
+---
+
+## [1.0.2] - 2026-10-15
+
+### Added
+- **Sandbox Dummy Datasets**: Dataset lengkap 10 pasien dummy dan 10 tenaga kesehatan/dokter dummy resmi SATUSEHAT Sandbox DTO Kemenkes RI.
+- **Lookup Helpers**: Method pencarian dummy sandbox berdasarkan NIK (`findPatientSandboxByNik`, `findPractitionerSandboxByNik`) dan Nomor IHS (`findPatientSandboxByIhs`, `findPractitionerSandboxByIhs`).
+- **Patient Search Helpers**: Method helper fluent untuk pencarian pasien berdasarkan NIK (`getPatientByNik`), NIK Ibu (`getPatientByNikIbu`), dan parameter lainnya.
+
+---
+
+## [1.0.1] - 2026-10-14
+
+### Added
+- **Modul SSRME (SATUSEHAT Rekam Medis Elektronik)**: Integrasi modul resmi DTO Kemenkes untuk akses resume medis pasien nasional melalui API CHLink (`createCHLink`) dan SHLink (`createSHLink`).
+
+---
+
 ## [1.0.0] - 2026-10-13
 
 ### Rilis Awal — Newus Technology (`newustechnology/satusehat-integration`)

@@ -254,9 +254,22 @@ class OAuth2Client
 
         $this->override = $config['override'] ?? ss_config('satusehatintegration.ss_parameter_override');
 
-        $this->satusehat_env = $config['environment']
+        $rawEnv = $config['environment']
             ?? $config['satusehat_env']
             ?? ($this->override ? null : (getenv('SATUSEHAT_ENV') ?: null));
+
+        if ($rawEnv !== null) {
+            $upper = strtoupper((string) $rawEnv);
+            if (in_array($upper, ['STG', 'STAGING', 'SANDBOX'], true)) {
+                $this->satusehat_env = 'STG';
+            } elseif (in_array($upper, ['PROD', 'PRODUCTION'], true)) {
+                $this->satusehat_env = 'PROD';
+            } else {
+                $this->satusehat_env = $rawEnv;
+            }
+        } else {
+            $this->satusehat_env = null;
+        }
 
         if ($this->satusehat_env === 'PROD') {
             $this->base_url = $config['base_url'] ?? (getenv('SATUSEHAT_BASE_URL_PROD') ?: 'https://api-satusehat.kemkes.go.id');
@@ -264,15 +277,10 @@ class OAuth2Client
             $this->client_secret = $config['client_secret'] ?? getenv('CLIENTSECRET_PROD');
             $this->organization_id = $config['organization_id'] ?? getenv('ORGID_PROD');
         } elseif ($this->satusehat_env === 'STG') {
-            $this->base_url = $config['base_url'] ?? (getenv('SATUSEHAT_BASE_URL_STG') ?: 'https://api-satusehat-stg.dto.kemkes.go.id');
-            $this->client_id = $config['client_id'] ?? getenv('CLIENTID_STG');
-            $this->client_secret = $config['client_secret'] ?? getenv('CLIENTSECRET_STG');
-            $this->organization_id = $config['organization_id'] ?? getenv('ORGID_STG');
-        } elseif ($this->satusehat_env === 'DEV') {
-            $this->base_url = $config['base_url'] ?? (getenv('SATUSEHAT_BASE_URL_DEV') ?: 'https://api-satusehat-dev.dto.kemkes.go.id');
-            $this->client_id = $config['client_id'] ?? getenv('CLIENTID_DEV');
-            $this->client_secret = $config['client_secret'] ?? getenv('CLIENTSECRET_DEV');
-            $this->organization_id = $config['organization_id'] ?? getenv('ORGID_DEV');
+            $this->base_url = $config['base_url'] ?? (getenv('SATUSEHAT_BASE_URL_STG') ?: (getenv('SATUSEHAT_BASE_URL_SANDBOX') ?: 'https://api-satusehat-stg.dto.kemkes.go.id'));
+            $this->client_id = $config['client_id'] ?? (getenv('CLIENTID_STG') ?: getenv('CLIENTID_SANDBOX'));
+            $this->client_secret = $config['client_secret'] ?? (getenv('CLIENTSECRET_STG') ?: getenv('CLIENTSECRET_SANDBOX'));
+            $this->organization_id = $config['organization_id'] ?? (getenv('ORGID_STG') ?: getenv('ORGID_SANDBOX'));
         } else {
             // Custom or override fallback
             if (! empty($config['base_url'])) {
@@ -296,12 +304,8 @@ class OAuth2Client
             throw new OAuth2ClientException('SATUSEHAT environment is missing');
         }
 
-        if (! in_array($this->satusehat_env, ['DEV', 'STG', 'PROD']) && ! $this->override) {
-            throw new OAuth2ClientException('SATUSEHAT environment invalid, supported (DEV, STG, PROD). ' . (string) $this->satusehat_env . ' given.');
-        }
-
-        if ($this->satusehat_env === 'DEV' && (empty($this->client_id) || empty($this->client_secret) || empty($this->organization_id)) && ! $this->override) {
-            throw new OAuth2ClientException('SATUSEHAT environment defined as DEV, but CLIENTID_DEV / CLIENTSECRET_DEV / ORGID_DEV not set');
+        if (! in_array($this->satusehat_env, ['STG', 'PROD']) && ! $this->override) {
+            throw new OAuth2ClientException('SATUSEHAT environment invalid, supported (STG, PROD). ' . (string) $this->satusehat_env . ' given.');
         }
 
         if ($this->satusehat_env === 'STG' && (empty($this->client_id) || empty($this->client_secret) || empty($this->organization_id)) && ! $this->override) {

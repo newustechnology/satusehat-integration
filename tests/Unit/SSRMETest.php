@@ -20,7 +20,7 @@ class SSRMETest extends TestCase
     private function createMockSSRME(array $mockResponses = []): SSRME
     {
         $storage = new MemoryTokenStorage();
-        $storage->set('DEV', 'dev_id', 'mock_token', 3000);
+        $storage->set('STG', 'stg_id', 'mock_token', 3000);
 
         if (! empty($mockResponses)) {
             $mock = new MockHandler($mockResponses);
@@ -30,12 +30,12 @@ class SSRMETest extends TestCase
         }
 
         return new SSRME([
-            'environment' => 'DEV',
-            'client_id' => 'dev_id',
-            'client_secret' => 'dev_secret',
+            'environment' => 'STG',
+            'client_id' => 'stg_id',
+            'client_secret' => 'stg_secret',
             'organization_id' => '10000004',
             'organization_name' => 'RS Satusehat',
-            'base_url' => 'https://api-satusehat-dev.dto.kemkes.go.id',
+            'base_url' => 'https://api-satusehat-stg.dto.kemkes.go.id',
             'token_storage' => $storage,
         ]);
     }
@@ -50,11 +50,11 @@ class SSRMETest extends TestCase
     {
         $ssrme = $this->createMockSSRME();
 
-        $this->assertSame('DEV', $ssrme->satusehat_env);
+        $this->assertSame('STG', $ssrme->satusehat_env);
         $this->assertSame('10000004', $ssrme->organization_id);
         $this->assertSame('RS Satusehat', $ssrme->organization_name);
-        $this->assertSame('https://api-satusehat-dev.dto.kemkes.go.id/ssrme/v2/rct/chl', $ssrme->getChlinkUrl());
-        $this->assertSame('https://api-satusehat-dev.dto.kemkes.go.id/ssrme/v2/rct/shl', $ssrme->getShlinkUrl());
+        $this->assertSame('https://api-satusehat-stg.dto.kemkes.go.id/ssrme/v2/rct/chl', $ssrme->getChlinkUrl());
+        $this->assertSame('https://api-satusehat-stg.dto.kemkes.go.id/ssrme/v2/rct/shl', $ssrme->getShlinkUrl());
     }
 
     public function testSSRMEInitializesWithExistingOAuth2Client(): void

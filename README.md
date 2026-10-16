@@ -36,15 +36,9 @@ composer require newustechnology/satusehat-integration
 ## Konfigurasi Environment (`.env`)
 
 ```env
-SATUSEHAT_ENV=DEV # Opsi: DEV, STG, PROD
+SATUSEHAT_ENV=STG # Opsi: STG (Sandbox/Staging), PROD (Production)
 
-# Jika DEV:
-SATUSEHAT_BASE_URL_DEV=https://api-satusehat-dev.dto.kemkes.go.id
-CLIENTID_DEV=your_dev_client_id
-CLIENTSECRET_DEV=your_dev_client_secret
-ORGID_DEV=your_dev_org_id
-
-# Jika STG:
+# Jika STG (Sandbox / Staging):
 SATUSEHAT_BASE_URL_STG=https://api-satusehat-stg.dto.kemkes.go.id
 CLIENTID_STG=your_stg_client_id
 CLIENTSECRET_STG=your_stg_client_secret
@@ -177,9 +171,9 @@ use Newus\Satusehat\OAuth2Client;
 use Newus\Satusehat\SSRequest\SSRequest;
 
 $client = new OAuth2Client([
-    'environment' => 'DEV',
-    'client_id' => 'your_dev_id',
-    'client_secret' => 'your_dev_secret',
+    'environment' => 'STG',
+    'client_id' => 'your_stg_id',
+    'client_secret' => 'your_stg_secret',
     'organization_id' => 'your_org_id',
 ]);
 

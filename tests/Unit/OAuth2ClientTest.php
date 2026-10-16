@@ -2,6 +2,7 @@
 
 namespace Newus\Satusehat\Tests\Unit;
 
+use Newus\Satusehat\Exception\Helper\OAuth2ClientException;
 use Newus\Satusehat\OAuth2Client;
 use Newus\Satusehat\Storage\MemoryTokenStorage;
 use PHPUnit\Framework\TestCase;
@@ -11,28 +12,55 @@ class OAuth2ClientTest extends TestCase
     public function testConstructorAcceptsArrayConfigDirectly(): void
     {
         $client = new OAuth2Client([
+            'environment' => 'STG',
+            'client_id' => 'stg_id',
+            'client_secret' => 'stg_secret',
+            'organization_id' => 'stg_org',
+            'token_storage' => new MemoryTokenStorage(),
+        ]);
+
+        $this->assertSame('STG', $client->satusehat_env);
+        $this->assertSame('stg_id', $client->client_id);
+        $this->assertSame('stg_org', $client->organization_id);
+    }
+
+    public function testSandboxEnvironmentNormalizedToStg(): void
+    {
+        $client = new OAuth2Client([
+            'environment' => 'SANDBOX',
+            'client_id' => 'stg_id',
+            'client_secret' => 'stg_secret',
+            'organization_id' => 'stg_org',
+            'token_storage' => new MemoryTokenStorage(),
+        ]);
+
+        $this->assertSame('STG', $client->satusehat_env);
+        $this->assertSame('https://api-satusehat-stg.dto.kemkes.go.id', $client->base_url);
+    }
+
+    public function testDevEnvironmentThrowsException(): void
+    {
+        $this->expectException(OAuth2ClientException::class);
+        $this->expectExceptionMessage('SATUSEHAT environment invalid, supported (STG, PROD). DEV given.');
+
+        new OAuth2Client([
             'environment' => 'DEV',
             'client_id' => 'dev_id',
             'client_secret' => 'dev_secret',
             'organization_id' => 'dev_org',
-            'token_storage' => new MemoryTokenStorage(),
         ]);
-
-        $this->assertSame('DEV', $client->satusehat_env);
-        $this->assertSame('dev_id', $client->client_id);
-        $this->assertSame('dev_org', $client->organization_id);
     }
 
     public function testTokenRetrievedFromCache(): void
     {
         $storage = new MemoryTokenStorage();
-        $storage->set('DEV', 'dev_id', 'cached-jwt-token', 3000);
+        $storage->set('STG', 'stg_id', 'cached-jwt-token', 3000);
 
         $client = new OAuth2Client([
-            'environment' => 'DEV',
-            'client_id' => 'dev_id',
-            'client_secret' => 'dev_secret',
-            'organization_id' => 'dev_org',
+            'environment' => 'STG',
+            'client_id' => 'stg_id',
+            'client_secret' => 'stg_secret',
+            'organization_id' => 'stg_org',
             'token_storage' => $storage,
         ]);
 
@@ -42,10 +70,10 @@ class OAuth2ClientTest extends TestCase
     public function testRespondErrorFormat(): void
     {
         $client = new OAuth2Client([
-            'environment' => 'DEV',
-            'client_id' => 'dev_id',
-            'client_secret' => 'dev_secret',
-            'organization_id' => 'dev_org',
+            'environment' => 'STG',
+            'client_id' => 'stg_id',
+            'client_secret' => 'stg_secret',
+            'organization_id' => 'stg_org',
         ]);
 
         $res = $client->respondError(['statusCode' => 404, 'res' => 'Not found']);
@@ -56,10 +84,10 @@ class OAuth2ClientTest extends TestCase
     public function testSandboxPatientDataAndLookup(): void
     {
         $client = new OAuth2Client([
-            'environment' => 'DEV',
-            'client_id' => 'dev_id',
-            'client_secret' => 'dev_secret',
-            'organization_id' => 'dev_org',
+            'environment' => 'STG',
+            'client_id' => 'stg_id',
+            'client_secret' => 'stg_secret',
+            'organization_id' => 'stg_org',
         ]);
 
         $this->assertCount(10, $client->patient_dev);
@@ -87,10 +115,10 @@ class OAuth2ClientTest extends TestCase
     public function testSandboxPractitionerDataAndLookup(): void
     {
         $client = new OAuth2Client([
-            'environment' => 'DEV',
-            'client_id' => 'dev_id',
-            'client_secret' => 'dev_secret',
-            'organization_id' => 'dev_org',
+            'environment' => 'STG',
+            'client_id' => 'stg_id',
+            'client_secret' => 'stg_secret',
+            'organization_id' => 'stg_org',
         ]);
 
         $this->assertCount(10, $client->practitioner_dev);
